@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/leermiddelen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta name="google-adsense-account" content="ca-pub-5912416388856489">
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <title>Leermiddelen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header-placeholder').innerHTML = data)
+            .catch(error => console.error('Error loading the header:', error));
+    </script>
+
+    <div class="leermiddelen-container">
+        <h1>Leermiddelen</h1>
+        
+        <div class="add-link-form">
+            <input type="text" id="linkName" placeholder="Naam van de link" required>
+            <input type="url" id="linkUrl" placeholder="URL (begin met https://)" required>
+            <button onclick="addLink()" class="styled-button">Link Toevoegen</button>
+        </div>
+
+        <div id="linksList" class="links-list"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            displayLinks();
+        });
+
+        function addLink() {
+            const name = document.getElementById('linkName').value.trim();
+            const url = document.getElementById('linkUrl').value.trim();
+
+            if (!name || !url) {
+                alert('Vul beide velden in');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https:///')) {
+                alert('URL%20moet%20beginnen%20met%20http_/%20of%20https_/index.html');
+                return;
+            }
+
+            const links = JSON.parse(localStorage.getItem('leermiddelen') || '[]');
+            links.push({ name, url });
+            localStorage.setItem('leermiddelen', JSON.stringify(links));
+
+            document.getElementById('linkName').value = '';
+            document.getElementById('linkUrl').value = '';
+
+            displayLinks();
+        }
+
+        function displayLinks() {
+            const linksList = document.getElementById('linksList');
+            linksList.innerHTML = '';
+            
+            const links = JSON.parse(localStorage.getItem('leermiddelen') || '[]');
+            
+            links.forEach((link, index) => {
+                const linkElement = document.createElement('div');
+                linkElement.className = 'link-item';
+                linkElement.innerHTML = `
+                    <a href="${link.url}" target="_blank" class="link-button">${link.name}</a>
+                    <button onclick="deleteLink(${index})" class="delete-button">X</button>
+                `;
+                linksList.appendChild(linkElement);
+            });
+        }
+
+        function deleteLink(index) {
+            const links = JSON.parse(localStorage.getItem('leermiddelen') || '[]');
+            links.splice(index, 1);
+            localStorage.setItem('leermiddelen', JSON.stringify(links));
+            displayLinks();
+        }
+    </script>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/leermiddelen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+</html>

@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/code.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:45:57 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta name="google-adsense-account" content="ca-pub-5912416388856489">
+    <meta charset="UTF-8">
+    <title>Account Aanmaken</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4bab4f;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3d8a40;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Account Aanmaken</h2>
+        <form id="accountForm">
+            <input type="text" id="username" placeholder="Gebruikersnaam" required>
+            <input type="text" id="icalCode" placeholder="iCal Code" required>
+            <input type="text" id="chatCode" placeholder="Chat Code" required>
+            <button type="submit" id="createAccountBtn">Account Aanmaken</button>
+        </form>
+        <p>als je op acount aanmaken klikt gaat u akkort met de <a href="terms%20of%20use.html">terms of use</a>!</p>
+        <p>Weet je niet hoe je je ical token kan vinden? klik dan <a href="instucties.html">hier</a></p>
+        <a href="index-2.html">Home</a>
+    </div>
+    <script>
+        // Haal de knop op
+        const button = document.getElementById("createAccountBtn");
+
+        // Maak een nieuwe Audio instance en geef het mp3-bestand op
+        const geluid = new Audio('aanmelding%20gelukt.mp3');
+
+        // Voeg een event listener toe voor de klik op de knop
+        button.addEventListener('click', () => {
+            // Speel het geluid af
+            geluid.play();
+        });
+    </script>
+    <script>
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            
+
+            
+            const username = document.getElementById('username').value;
+            const icalCode = document.getElementById('icalCode').value;
+            const chatCode = document.getElementById('chatCode').value;
+            
+            if (!username || !icalCode || !chatCode) {
+                alert('Vul alle velden in, inclusief de chat code!');
+                return;
+            }
+
+            // Haal bestaande accounts op of maak nieuwe array
+            let accounts = JSON.parse(localStorage.getItem('calendarAccounts')) || [];
+            
+            // Controleer of gebruikersnaam al bestaat
+            if (accounts.some(acc => acc.username === username)) {
+                alert('Deze gebruikersnaam bestaat al!');
+                return;
+            }
+            
+            // Voeg nieuw account toe
+            accounts.push({
+                username: username,
+                icalCode: icalCode,
+                chatCode: chatCode
+            });
+            
+            // Sla accounts op in localStorage
+            localStorage.setItem('calendarAccounts', JSON.stringify(accounts));
+            
+            // Sla ook de chatcode apart op voor de huidige gebruiker
+            localStorage.setItem('currentChatCode', chatCode);
+            
+            alert('Account succesvol aangemaakt!');
+            window.location.href = 'index-2.html';
+        });
+    </script>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/code.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:45:58 GMT -->
+</html>

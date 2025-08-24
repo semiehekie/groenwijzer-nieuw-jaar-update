@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="nl">
+     <div id="header-placeholder"></div>
+
+      <script>
+          fetch('header.html')
+              .then(response => response.text())
+              .then(data => document.getElementById('header-placeholder').innerHTML = data)
+              .catch(error => console.error('Error loading the header:', error));
+      </script>
+
+<!-- Mirrored from groenwijzernederland.web.app/notities2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta name="google-adsense-account" content="ca-pub-5912416388856489">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notities & Bestanden</title>
+    
+  <!--  <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        textarea { width: 100%; height: 100px; margin-top: 10px; }
+        button { margin-top: 10px; display: block; }
+        .file-list, .note-list { margin-top: 20px; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.5); width: 80%; max-width: 500px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; }
+    </style>  -->
+</head>
+<body>
+    
+    <div class="container">
+        <h2>Bestanden uploaden</h2>
+        <input type="file" id="fileInput">
+        
+        <h2>Notitie maken</h2>
+        <input type="text" id="noteTitle" placeholder="Titel">
+        <textarea id="noteContent" placeholder="Schrijf je notitie hier..."></textarea>
+        <button onclick="saveNote()">Notitie opslaan</button>
+        
+        <h2>Opgeslagen Bestanden</h2>
+        <ul id="fileList" class="file-list"></ul>
+        
+        <h2>Opgeslagen Notities</h2>
+        <ul id="noteList" class="note-list"></ul>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+    <div class="modal" id="noteModal">
+        <h2 id="modalTitle"></h2>
+        <p id="modalContent" class="modal-content"></p>
+        <button onclick="closeModal()">Sluiten</button>
+    </div>
+   <!--<a href="index.html">Home</a> -->
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileData = { name: file.name, data: e.target.result };
+                    let files = JSON.parse(localStorage.getItem('files')) || [];
+                    files.push(fileData);
+                    localStorage.setItem('files', JSON.stringify(files));
+                    displayFiles();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function displayFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            const files = JSON.parse(localStorage.getItem('files')) || [];
+            files.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.textContent = file.name;
+                li.style.cursor = 'pointer';
+                li.onclick = () => openModal({ title: file.name, content: file.data });
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X'; // Changed the text to 'X'
+                deleteBtn.onclick = (event) => {
+                    event.stopPropagation();
+                    deleteFile(index);
+                };
+                
+                li.appendChild(deleteBtn);
+                fileList.appendChild(li);
+            });
+        }
+
+        function deleteFile(index) {
+            let files = JSON.parse(localStorage.getItem('files')) || [];
+            files.splice(index, 1);
+            localStorage.setItem('files', JSON.stringify(files));
+            displayFiles();
+        }
+
+        function saveNote() {
+            const title = document.getElementById('noteTitle').value;
+            const content = document.getElementById('noteContent').value;
+            if (title && content) {
+                let notes = JSON.parse(localStorage.getItem('notes')) || [];
+                notes.push({ title, content });
+                localStorage.setItem('notes', JSON.stringify(notes));
+                displayNotes();
+                document.getElementById('noteTitle').value = '';
+                document.getElementById('noteContent').value = '';
+            }
+        }
+
+        function displayNotes() {
+            const noteList = document.getElementById('noteList');
+            noteList.innerHTML = '';
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.forEach((note, index) => {
+                const li = document.createElement('li');
+                li.textContent = note.title;
+                li.style.cursor = 'pointer';
+                li.onclick = () => openModal(note);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X'; // Changed the text to 'X'
+                deleteBtn.onclick = (event) => {
+                    event.stopPropagation();
+                    deleteNote(index);
+                };
+                
+                li.appendChild(deleteBtn);
+                noteList.appendChild(li);
+            });
+        }
+
+        function deleteNote(index) {
+            let notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            displayNotes();
+        }
+
+        function openModal(note) {
+            document.getElementById('modalTitle').textContent = note.title;
+            document.getElementById('modalContent').textContent = note.content;
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.getElementById('noteModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.getElementById('noteModal').style.display = 'none';
+        }
+
+        window.onload = function() {
+            displayFiles();
+            displayNotes();
+        };
+    </script>
+
+<a href="p2p.html">p2p</a>
+    
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/notities2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+</html>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            display: block;
+        }
+        .file-list, .note-list {
+            margin-top: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            width: 80%;
+            max-width: 500px;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+
+
+
+        <script src="../cdn.jotfor.ms/s/umd/latest/for-embedded-agent.js"></script>
+
+        <script>
+            
+          window.addEventListener("DOMContentLoaded", function() {
+            window.AgentInitializer.init({
+              rootId: "JotformAgent-01955c13c07d78c0a93d57d6acb16703105d",
+              formID: "01955c13c07d78c0a93d57d6acb16703105d",
+              queryParams: ["skipWelcome=1", "maximizable=1"],
+              domain: "https:\/\/eu.jotform.com",
+              isInitialOpen: false,
+              isDraggable: false,
+              background: "linear-gradient(180deg, #C8CEED 0%, #C8CEED 100%)",
+              buttonBackgroundColor: "#0a1551",
+              buttonIconColor: "#fff",
+              variant: false,
+              customizations: {
+                greeting: "No",
+                pulse: "Yes",
+                position: "bottom-right"
+              }
+            });
+          });
+        </script>

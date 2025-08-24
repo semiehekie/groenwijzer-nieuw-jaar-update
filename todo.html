@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from groenwijzernederland.web.app/todo.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta name="google-adsense-account" content="ca-pub-5912416388856489">
+    <link rel="stylesheet" href="style.css">
+    <title>To-Do</title>
+    <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header-placeholder').innerHTML = data)
+            .catch(error => console.error('Error loading the header:', error));
+    </script>
+    
+    <h1 class="To-Do">To-Do</h1>
+    <div class="container">
+        <input type="text" id="taskInput" placeholder="Nieuwe taak">
+        <button onclick="addTask()">Toevoegen</button>
+        <ul id="taskList"></ul>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", loadTasks);
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.forEach(task => addTaskToList(task));
+        }
+        function addTask() {
+            let input = document.getElementById("taskInput");
+            let task = input.value.trim();
+            if (task === "") return;
+            addTaskToList(task);
+            saveTask(task);
+            input.value = "";
+        }
+        function addTaskToList(task) {
+            let ul = document.getElementById("taskList");
+            let li = document.createElement("li");
+            li.textContent = task;
+            let btn = document.createElement("button");
+            btn.textContent = "X";
+            btn.onclick = () => removeTask(li, task);
+            li.appendChild(btn);
+            ul.appendChild(li);
+        }
+        function saveTask(task) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.push(task);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+        function removeTask(li, task) {
+            li.remove();
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks = tasks.filter(t => t !== task);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+    </script>
+    
+    
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+
+   
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/todo.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+</html>

@@ -1,0 +1,65 @@
+
+<header>
+    <img src="images/logo.png" alt="Header Image" class="header-image">
+    <nav class="headerlinks">
+   
+    <a href="index-2.html" class="headerlink"><button class="buttonheader">rooster</button></a>
+    <!--<a href="afwezigheid.html" class="headerlink"><button class="buttonheader">afwezigheid</button></a>
+    <a href="vakken.html" class="headerlink"><button class="buttonheader">vakken</button></a>
+    <a href="cijfers.html" class="headerlink"><button class="buttonheader">cijfers</button></a> -->
+    <a href="notities2.html" class="headerlink"><button class="buttonheader">notities</button></a>
+    <a href="todo.html" class="headerlink"><button class="buttonheader">To-Do</button></a>
+    <a href="leermiddelen.html" class="headerlink"><button class="buttonheader">leermiddelen</button></a>
+    <a href="cijfers.html" class="headerlink"><button class="buttonheader">Cijfers</button></a>
+    
+    <a href="chat.html" class="headerlink"><button class="buttonheader">Chat</button></a>
+    
+
+   
+      <a href="premium/auth.html" class="headerlink"><button class="buttonheader">Groenwijzer+</button></a>
+    <!-- <button href="huiswerk.html""">huiswerk</button> proberen  -->
+     </nav>
+    <a href="settings.html" class="headerlink"><button class="buttonheader">instellingen</button></a>
+</header>
+
+<!-- Mirrored from groenwijzernederland.web.app/header.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:00 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    // Pas globale instellingen toe bij laden van elke pagina
+    function applyGlobalSettings() {
+        const fontSize = localStorage.getItem('fontSize') || 'medium';
+        const compactView = localStorage.getItem('compactView') === 'true';
+
+        // Pas font size toe
+        let baseFontSize = '16px';
+        switch(fontSize) {
+            case 'small': baseFontSize = '14px'; break;
+            case 'large': baseFontSize = '18px'; break;
+        }
+        document.documentElement.style.setProperty('--base-font-size', baseFontSize);
+
+        // Pas compact view toe
+        const spacing = compactView ? '0.5rem' : '1rem';
+        document.documentElement.style.setProperty('--content-spacing', spacing);
+        document.documentElement.style.setProperty('--element-padding', spacing);
+    }
+
+    // Voer direct uit bij laden
+    document.addEventListener('DOMContentLoaded', applyGlobalSettings);
+    </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const link = document.getElementById("premiumLink");
+    const heeftPremium = localStorage.getItem("groenwijzer+");
+
+    if (heeftPremium === "true") {
+      link.href = "premium/auth.html";
+    } else {
+      link.href = "premium/kopen.html";
+    }
+  });
+</script>
+
+</head>

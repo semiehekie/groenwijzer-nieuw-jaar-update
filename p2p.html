@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/p2p.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:04 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta name="google-adsense-account" content="ca-pub-5912416388856489">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Notities met PeerJS</title>
+    <script src="../unpkg.com/peerjs%401.3.1/dist/peerjs.min.js"></script>
+    <script>
+        let peer;
+        let conn;
+
+        function initPeer() {
+            peer = new Peer();
+            peer.on('open', id => {
+                document.getElementById('peerId').value = id;
+            });
+
+            peer.on('connection', connection => {
+                conn = connection;
+                setupConnection();
+            });
+        }
+
+        function connectToPeer() {
+            const peerId = document.getElementById('peerIdInput').value;
+            conn = peer.connect(peerId);
+            conn.on('open', setupConnection);
+        }
+
+        function setupConnection() {
+            conn.on('data', data => {
+                document.getElementById('notitie').value = data;
+            });
+            document.getElementById('notitie').addEventListener('input', () => {
+                if (conn && conn.open) {
+                    conn.send(document.getElementById('notitie').value);
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="initPeer()">
+    <h2>P2P Notities met PeerJS</h2>
+    <textarea id="notitie" rows="10" cols="50" placeholder="Typ hier je notities..."></textarea>
+    <br>
+    <input type="text" id="peerId" readonly placeholder="Jouw Peer ID">
+    <br>
+    <input type="text" id="peerIdInput" placeholder="Peer ID van partner">
+    <button onclick="connectToPeer()">Verbind</button>
+
+    <a href="index-2.html"><button>home</button></a>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/p2p.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:04 GMT -->
+</html>
+<style>
+    body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+    }
+
+    textarea {
+        width: 500px;
+        height: 200px;
+        margin-bottom: 10px;
+    }
+
+    input {
+        margin-bottom: 10px;
+    }
+</style>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from groenwijzernederland.web.app/cijfers.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cijfers Tracker</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #4bab4f;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+    }
+
+    div {
+        margin: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #3a8a3e;
+    }
+
+    input, button {
+        margin: 5px;
+        padding: 5px;
+        border: none;
+        border-radius: 3px;
+    }
+
+    button {
+        background-color: #2e6f31;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #255a28;
+    }
+
+    .vak {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #3a8a3e;
+    }
+
+    .vak .menu {
+        display: none;
+        margin-top: 10px;
+        background-color: #2e6f31;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: left;
+        border-bottom: 1px solid white;
+    }
+    </style>
+</head>
+<div id="header-placeholder"></div>
+
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('header-placeholder').innerHTML = data)
+      .catch(error => console.error('Error loading the header:', error));
+  </script>
+<body>
+    <h1>Cijfers Tracker</h1>
+
+    <div class="recent-cijfers">
+        <h2>Recentste Cijfers</h2>
+        <ul id="recent-cijfers"></ul>
+    </div>
+
+    <div class="vakken">
+        <h2>Vakken</h2>
+        <div id="vakken"></div>
+    </div>
+
+    <div class="add-cijfer">
+        <h2>Voeg een Cijfer Toe</h2>
+        <label for="cijfer">Cijfer:</label>
+        <input type="number" id="cijfer" step="0.1" min="1" max="10">
+        <label for="weging">Weging:</label>
+        <input type="number" id="weging" step="1" min="1">
+        <button onclick="showVakSelect()">Verder</button>
+    </div>
+
+    <div id="vak-select" style="display: none;">
+        <h3>Kies een Vak</h3>
+        <div id="vak-options"></div>
+        <button onclick="addCijfer()">Toevoegen</button>
+    </div>
+
+    <script>
+        const vakken = JSON.parse(localStorage.getItem('vakken')) || {};
+
+        function updateUI() {
+            const recentCijfers = document.getElementById('recent-cijfers');
+            const vakkenDiv = document.getElementById('vakken');
+            recentCijfers.innerHTML = '';
+            vakkenDiv.innerHTML = '';
+
+            const allCijfers = [];
+            for (const vak in vakken) {
+                vakken[vak].forEach(c => allCijfers.push({ vak, ...c }));
+            }
+            allCijfers.sort((a, b) => b.timestamp - a.timestamp);
+            const recent = allCijfers.slice(0, 3);
+            recent.forEach(c => {
+                const li = document.createElement('li');
+                li.textContent = `${c.vak}: ${c.cijfer} (${c.weging})`;
+                recentCijfers.appendChild(li);
+            });
+
+            for (const vak in vakken) {
+                const cijfers = vakken[vak];
+                const gemiddelde = cijfers.reduce((sum, c) => sum + c.cijfer * c.weging, 0) /
+                                                     cijfers.reduce((sum, c) => sum + c.weging, 0);
+                const vakDiv = document.createElement('div');
+                vakDiv.className = 'vak';
+                const vakName = document.createElement('span');
+                vakName.textContent = `${vak} (Gemiddelde: ${gemiddelde.toFixed(2)})`;
+                vakName.style.cursor = 'pointer';
+                vakName.onclick = () => toggleMenu(vak);
+                vakDiv.appendChild(vakName);
+
+                const menu = document.createElement('div');
+                menu.className = 'menu';
+                const table = document.createElement('table');
+                const header = document.createElement('tr');
+                header.innerHTML = '<th>Cijfer</th><th>Weging</th>';
+                table.appendChild(header);
+                cijfers.forEach(c => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${c.cijfer}</td><td>${c.weging}</td>`;
+                    table.appendChild(row);
+                });
+                menu.appendChild(table);
+                vakDiv.appendChild(menu);
+
+                vakkenDiv.appendChild(vakDiv);
+            }
+        }
+
+        function toggleMenu(vak) {
+            const vakDivs = document.querySelectorAll('.vak');
+            vakDivs.forEach(div => {
+                const menu = div.querySelector('.menu');
+                if (div.firstChild.textContent.startsWith(vak)) {
+                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                } else {
+                    menu.style.display = 'none';
+                }
+            });
+        }
+
+        function showVakSelect() {
+            const cijfer = document.getElementById('cijfer').value;
+            const weging = document.getElementById('weging').value;
+            if (!cijfer || !weging) {
+                alert('Vul een cijfer en weging in.');
+                return;
+            }
+            localStorage.setItem('tempCijfer', JSON.stringify({ cijfer: parseFloat(cijfer), weging: parseInt(weging), timestamp: Date.now() }));
+            const vakSelect = document.getElementById('vak-select');
+            const vakOptions = document.getElementById('vak-options');
+            vakOptions.innerHTML = '';
+            for (const vak in vakken) {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'vak';
+                input.value = vak;
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(vak));
+                vakOptions.appendChild(label);
+                vakOptions.appendChild(document.createElement('br'));
+            }
+            const newVakLabel = document.createElement('label');
+            const newVakInput = document.createElement('input');
+            newVakInput.type = 'radio';
+            newVakInput.name = 'vak';
+            newVakInput.value = 'new';
+            newVakLabel.appendChild(newVakInput);
+            newVakLabel.appendChild(document.createTextNode('Nieuw Vak'));
+            vakOptions.appendChild(newVakLabel);
+            vakOptions.appendChild(document.createElement('br'));
+            vakSelect.style.display = 'block';
+        }
+
+        function addCijfer() {
+            const selectedVak = document.querySelector('input[name="vak"]:checked');
+            if (!selectedVak) {
+                alert('Selecteer een vak.');
+                return;
+            }
+            const vak = selectedVak.value === 'new' ? prompt('Voer de naam van het nieuwe vak in:') : selectedVak.value;
+            if (!vak) {
+                alert('Geen vak ingevoerd.');
+                return;
+            }
+            const tempCijfer = JSON.parse(localStorage.getItem('tempCijfer'));
+            if (!vakken[vak]) vakken[vak] = [];
+            vakken[vak].push(tempCijfer);
+            localStorage.setItem('vakken', JSON.stringify(vakken));
+            localStorage.removeItem('tempCijfer');
+            document.getElementById('vak-select').style.display = 'none';
+            updateUI();
+        }
+
+        updateUI();
+    </script>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/cijfers.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:01 GMT -->
+</html>
