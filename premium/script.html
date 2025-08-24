@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="nl">
+  
+<!-- Mirrored from groenwijzernederland.web.app/premium/script.js by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:06 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta
+      name="keywords"
+      content="Somtoday, rooster, schoolrooster, iCalendar, GroenWijzerNederland"
+    />
+    <meta http-equiv="refresh" content="60" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekrooster</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="images/logo.png" type="image/png" />
+    <style>
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        width: 400px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .close-btn {
+        background: #4bab4f;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: white;
+        padding: 0 10px;
+        border-radius: 5px;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="modal" id="updateModal">
+      <div class="modal-header">
+        <h3>Update Log</h3>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>
+            2 mei: 🎀 Een OS in groenwijzer! (beta) ⭐
+          </li>
+          <li>
+            1 mei: 📁 file explorer om je bestanden in op te slaan! 💾
+          </li>
+          <li>
+            1 mei: 💬 ai chatbot ⭐
+          </li>
+          <li>
+            1 mei: 💬 Een chatsysteem om met elkaar te chatten. Alle terroristische besprekingen die u voert kunnen NIET worden verwijderd! 💀
+          </li>
+          <li>24 april: 🏠 Een nieuwe homepagina in bèta! 🚀</li>
+          <li>
+            21 april: 📈 Nieuwe functie toegevoegd om je cijfers toe te voegen
+            en te bekijken! 🎉
+          </li>
+          <li>
+            18 april: 🎉 Nieuwe functie toegevoegd om je rooster te delen! 🌟
+          </li>
+          <h1>  </h1>
+          <p class="versie">versie 1.1.1</p>
+        </ul>
+      </div>
+    </div>
+<style>
+ .versie {
+   text-align: right;
+   margin-top: 50px;
+ }
+  
+</style>
+    <script>
+      function closeModal() {
+        document.getElementById("updateModal").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+        localStorage.setItem("logShowed", "false");
+        const today = new Date();
+        localStorage.setItem("logShowedDate", today.toISOString());
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const logShowed = localStorage.getItem("logShowed");
+        const logShowedDate = localStorage.getItem("logShowedDate");
+
+        if (logShowed === "false" && logShowedDate) {
+          const lastShown = new Date(logShowedDate);
+          const now = new Date();
+          const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+          if (now - lastShown > oneWeek) {
+            localStorage.setItem("logShowed", "true");
+          }
+        }
+
+        if (localStorage.getItem("logShowed") !== "false") {
+          document.getElementById("updateModal").style.display = "block";
+          document.getElementById("overlay").style.display = "block";
+        }
+      });
+    </script>
+
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <h2>Voer je code in</h2>
+        <p>Heb je geen code? Klik <a href="code.html">hier</a>.</p>
+        <input type="text" id="calendarCode" placeholder="Code invoeren" />
+        <button id="submitCode">Verstuur</button>
+        <button id="closePopup">Skip login</button>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("closePopup").addEventListener("click", () => {
+        document.getElementById("popup").style.display = "none";
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        const calendarCode = localStorage.getItem("calendarCode");
+        if (isLoggedIn && calendarCode) {
+          loadICalendarFromURL(calendarCode);
+          document.getElementById("popup").style.display = "none";
+        }
+      });
+    </script>
+
+    <div id="header-placeholder"></div>
+
+    <script>
+      fetch("header.html")
+        .then((response) => response.text())
+        .then(
+          (data) =>
+            (document.getElementById("header-placeholder").innerHTML = data),
+        )
+        .catch((error) => console.error("Error loading the header:", error));
+    </script>
+
+    <h1>Weekrooster</h1>
+    <button id="prevWeekButton">Vorige Week</button>
+    <button id="nextWeekButton">Volgende Week</button>
+
+    <div class="desktop-schedule">
+      <table>
+        <thead>
+          <tr>
+            <th class="tijdkolom">Tijd</th>
+            <th>Maandag</th>
+            <th>Dinsdag</th>
+            <th>Woensdag</th>
+            <th>Donderdag</th>
+            <th>Vrijdag</th>
+          </tr>
+        </thead>
+        <tbody id="eventTable">
+          <!-- Dynamische lessen komen hier -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="mobileSchedule" class="mobile-schedule">
+      <!-- Mobiele weergave komt hier -->
+    </div>
+
+    <footer>
+      <a href="ontwikkelaars.html">© 2025 Sem Hekman</a>
+    </footer>
+
+    <div style="margin-top: 20px">
+      <label style="display: block">Plak hier een gedeelde roosterlink:</label>
+      <input
+        type="text"
+        id="roosterLink"
+        placeholder="Voer roosterlink in"
+        style="width: 100%"
+      />
+      <button style="margin-top: 10px" onclick="laadRooster()">
+        Laad rooster
+      </button>
+      <button style="margin-top: 10px" onclick="deelRooster()">
+        Deel rooster
+      </button>
+    </div>
+
+    <!-- Deelmenu -->
+    <div
+      id="shareMenu"
+      style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 2000;
+      "
+    >
+      <h3>Deel jouw rooster</h3>
+      <input
+        type="text"
+        id="gedeeldeLink"
+        style="width: 100%; padding: 8px"
+        readonly
+      />
+      <button onclick="kopieerLink()" style="margin-top: 10px">
+        Kopieer naar klembord
+      </button>
+      <button
+        onclick="document.getElementById('shareMenu').style.display='none'"
+        style="margin-top: 10px"
+      >
+        Sluiten
+      </button>
+    </div>
+
+    <script>
+      function laadRooster() {
+        const link = document.getElementById("roosterLink").value;
+        if (!link) {
+          alert("Vul een geldige roosterlink in!");
+          return;
+        }
+        alert("Gekozen roosterlink: " + link);
+      }
+
+      function deelRooster() {
+        const calendarCode = localStorage.getItem("calendarCode");
+        if (!calendarCode) {
+          alert("Geen iCalendar-token gevonden in opslag.");
+          return;
+        }
+
+        // Alleen de iCalendar-token wordt gedeeld
+        const link = calendarCode;
+        document.getElementById("gedeeldeLink").value = link;
+        document.getElementById("shareMenu").style.display = "block";
+      }
+
+      function kopieerLink() {
+        const linkInput = document.getElementById("gedeeldeLink");
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999);
+        navigator.clipboard
+          .writeText(linkInput.value)
+          .then(() => {
+            alert("Link gekopieerd naar klembord!");
+          })
+          .catch((err) => {
+            alert("Kopiëren mislukt: " + err);
+          });
+      }
+    </script>
+
+    <script>
+      const popup = document.getElementById("popup");
+      popup.classList.add("fade-in");
+
+      document.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.classList.add("button-clicked");
+          setTimeout(() => button.classList.remove("button-clicked"), 300);
+        });
+      });
+
+      const observer = new MutationObserver(() => {
+        const rows = document.querySelectorAll("#eventTable tr");
+        rows.forEach((row) => {
+          row.classList.add("slide-in");
+          setTimeout(() => row.classList.remove("slide-in"), 500);
+        });
+      });
+
+      observer.observe(document.getElementById("eventTable"), {
+        childList: true,
+      });
+    </script>
+
+    <style>
+      .fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .button-clicked {
+        animation: buttonClick 0.3s ease-in-out;
+      }
+
+      @keyframes buttonClick {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(0.95);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .slide-in {
+        animation: slideIn 0.5s ease-in-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .loading-screen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: green;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .loading-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .loading-logo {
+        width: 150px;
+        height: auto;
+        animation: logoBounce 1.5s infinite ease-in-out;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #fff;
+        border-top: 5px solid transparent;
+        border-radius: 50%;
+        margin-top: 20px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes logoBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+
+    <div id="loadingScreen" class="loading-screen">
+      <div class="loading-content">
+        <img src="images/logo.png" alt="Logo" class="loading-logo" />
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        if (!isLoggedIn) {
+          const loadingScreen = document.getElementById("loadingScreen");
+          loadingScreen.style.display = "flex";
+          setTimeout(() => {
+            loadingScreen.style.display = "none";
+          }, 1500);
+        }
+      });
+    </script>
+
+    <script src="script.html"></script>
+    <a href="custom.html">homepagina (beta)</a>
+  </body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/script.js by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:06 GMT -->
+</html>
+
+

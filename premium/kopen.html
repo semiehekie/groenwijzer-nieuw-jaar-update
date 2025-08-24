@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/kopen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:03 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <title>GroenWijzer Abonnementen</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="script.html"></script>
+  <style>
+    
+  
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .section-title {
+      margin-top: 40px;
+      font-size: 24px;
+      color: #4bab4f;
+    }
+
+    .option, .key-box {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px auto;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .option h2, .key-box h2 {
+      margin-bottom: 10px;
+    }
+
+    .option a {
+      display: inline-block;
+      background-color: #4bab4f;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .option a:hover {
+      background-color: #3a9440;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #4bab4f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3a9440;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .buttonskopen {
+      background-color: #4bab4f;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+<a href="../index.html" class="buttonskopen"><button>rooster</button></a>
+<h1>Koop een abonnement</h1>
+<p>Kies hieronder een abonnement dat bij jou past.</p>
+
+<div class="uitleg-box">
+  <h2>Wat krijg je bij elk abonnement?</h2>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr style="background-color: #e6f5e6;">
+      <th style="padding: 10px; border: 1px solid #ccc;">Functie</th>
+      <th style="padding: 10px; border: 1px solid #ccc;">GroenWijzer+</th>
+      <th style="padding: 10px; border: 1px solid #ccc;">Premium</th>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ccc;">Persoonlijk dashboard</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ccc;">Virtuele computer</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ccc;">File manager</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">❌</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #ccc;">AI chatbot</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">❌</td>
+      <td style="padding: 10px; border: 1px solid #ccc;">✅</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section-title">GroenWijzer+</div>
+<div class="option">
+  <h2>1 Maand GroenWijzer+</h2>
+  <a href="https://semhekman.gumroad.com/l/krffmy" target="_blank">Kopen (€1,39)</a>
+</div>
+
+<div class="section-title">GroenWijzer Premium</div>
+<div class="option">
+  <h2>1 Week Premium</h2>
+  <a href="https://semhekman.gumroad.com/l/1weekpremium" target="_blank">Kopen (€1,50)</a>
+</div>
+
+<div class="option">
+  <h2>1 Maand Premium</h2>
+  <a href="https://semhekman.gumroad.com/l/mpefv" target="_blank">Kopen (€3,99)</a>
+</div>
+
+<div class="option">
+  <h2>1 Jaar Premium</h2>
+  <a href="https://semhekman.gumroad.com/l/sjqhxk" target="_blank">Kopen (€24,99)</a>
+</div>
+
+<div class="key-box">
+  <h2>Voer je Gumroad-key in:</h2>
+  <input type="text" id="keyInput" placeholder="Voer je key in...">
+  <br>
+  <button onclick="checkKey()">Key activeren</button>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+  (function(_0x2b7e60,_0x5d95fa){const _0x1505fd=_0x1def,_0x2bbcff=_0x2b7e60();while(!![]){try{const _0x2e93a1=-parseInt(_0x1505fd(0x170))/0x1*(parseInt(_0x1505fd(0x175))/0x2)+parseInt(_0x1505fd(0x164))/0x3+-parseInt(_0x1505fd(0x167))/0x4+-parseInt(_0x1505fd(0x16f))/0x5*(-parseInt(_0x1505fd(0x17e))/0x6)+-parseInt(_0x1505fd(0x16a))/0x7*(parseInt(_0x1505fd(0x172))/0x8)+parseInt(_0x1505fd(0x178))/0x9+-parseInt(_0x1505fd(0x16b))/0xa;if(_0x2e93a1===_0x5d95fa)break;else _0x2bbcff['push'](_0x2bbcff['shift']());}catch(_0x2686e6){_0x2bbcff['push'](_0x2bbcff['shift']());}}}(_0x370c,0x18ee5));const premiumKeys={'premium-QOB-398':0x7,'premium-XER-529':0x1e,'premium-QOB-759':0x16d},plusKeys={'plus-539-PTU':0x1e,'free-trial-1day':0x1};function _0x1def(_0x507a33,_0x8504cd){const _0x370ca4=_0x370c();return _0x1def=function(_0x1def81,_0x2c6e66){_0x1def81=_0x1def81-0x160;let _0x31eb95=_0x370ca4[_0x1def81];return _0x31eb95;},_0x1def(_0x507a33,_0x8504cd);}function _0x370c(){const _0x766ae=['43550HUDViK','toISOString','red','groenwijzer+','540105xTWLgY','8hnuuWp','textContent','560UHowsA','gwn_activated','setDate','24932cxsZVK','value','setItem','922293recYfi','href','trim','gwn_expires','green','❌\x20Ongeldige\x20key.\x20Controleer\x20je\x20invoer.','6YnUYwc','getDate','message','plus.html','location','keyInput','a4f','✅\x20GroenWijzer+\x20geactiveerd!\x20Je\x20wordt\x20doorgestuurd...','groenwijzer_premium','getElementById','31185UPVJBu','✅\x20Premium\x20geactiveerd!\x20Je\x20wordt\x20doorgestuurd...','b4f','50372WfsWnG','color','style','210LOHogT'];_0x370c=function(){return _0x766ae;};return _0x370c();}function encodeBase64(_0x414e90){return btoa(_0x414e90);}function checkKey(){const _0x2f00c0=_0x1def,_0x5d5f8b=document[_0x2f00c0(0x163)](_0x2f00c0(0x183))[_0x2f00c0(0x176)][_0x2f00c0(0x17a)](),_0x2735cd=document[_0x2f00c0(0x163)](_0x2f00c0(0x180)),_0x502ea8=new Date(),_0x120e34=new Date();if(_0x5d5f8b in premiumKeys)_0x120e34[_0x2f00c0(0x174)](_0x502ea8['getDate']()+premiumKeys[_0x5d5f8b]),localStorage['setItem'](_0x2f00c0(0x16e),'a4f'),localStorage[_0x2f00c0(0x177)](_0x2f00c0(0x162),_0x2f00c0(0x160)),localStorage[_0x2f00c0(0x177)](_0x2f00c0(0x173),encodeBase64(_0x502ea8[_0x2f00c0(0x16c)]())),localStorage[_0x2f00c0(0x177)]('gwn_expires',encodeBase64(_0x120e34[_0x2f00c0(0x16c)]())),_0x2735cd[_0x2f00c0(0x169)]['color']='green',_0x2735cd[_0x2f00c0(0x171)]=_0x2f00c0(0x165),setTimeout(()=>{const _0x119b3c=_0x2f00c0;window[_0x119b3c(0x182)][_0x119b3c(0x179)]='premium.html';},0x5dc);else _0x5d5f8b in plusKeys?(_0x120e34['setDate'](_0x502ea8[_0x2f00c0(0x17f)]()+plusKeys[_0x5d5f8b]),localStorage[_0x2f00c0(0x177)](_0x2f00c0(0x16e),_0x2f00c0(0x160)),localStorage['setItem'](_0x2f00c0(0x162),_0x2f00c0(0x166)),localStorage[_0x2f00c0(0x177)](_0x2f00c0(0x173),encodeBase64(_0x502ea8[_0x2f00c0(0x16c)]())),localStorage[_0x2f00c0(0x177)](_0x2f00c0(0x17b),encodeBase64(_0x120e34['toISOString']())),_0x2735cd['style'][_0x2f00c0(0x168)]=_0x2f00c0(0x17c),_0x2735cd[_0x2f00c0(0x171)]=_0x2f00c0(0x161),setTimeout(()=>{const _0x5a5cec=_0x2f00c0;window[_0x5a5cec(0x182)][_0x5a5cec(0x179)]=_0x5a5cec(0x181);},0x5dc)):(_0x2735cd[_0x2f00c0(0x169)][_0x2f00c0(0x168)]=_0x2f00c0(0x16d),_0x2735cd['textContent']=_0x2f00c0(0x17d));}
+</script>
+
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/kopen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:04 GMT -->
+</html>

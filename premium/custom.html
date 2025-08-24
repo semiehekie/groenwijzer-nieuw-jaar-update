@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/custom.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:09 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <script>
+      // Controleer localStorage
+      const plus = localStorage.getItem("groenwijzer+");
+
+      if (plus !== "a4f") {
+        window.location.href = "auth.html";
+      }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .widget {
+            position: absolute;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: move;
+            resize: both;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id="header-placeholder"></div>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header-placeholder').innerHTML = data)
+            .catch(error => console.error('Error loading the header:', error));
+    </script>
+<h1>Widget Dashboard</h1>
+    <div id="menu"></div>
+    <div id="workspace"></div>
+
+    <script>
+        const menu = document.getElementById('menu');
+        const workspace = document.getElementById('workspace');
+
+        const widgetsList = [
+            { name: 'cijfers', url: 'https://groenwijzernederland.web.app/cijfers.html' },
+            { name: 'notities', url: 'https://groenwijzernederland.web.app/notities2.html' },
+            { name: 'leermiddelen', url: 'https://groenwijzernederland.web.app/leermiddelen.html' },
+            { name: 'rooster (beta)', url: 'https://groenwijzernederland.web.app/index.html' }
+        ];
+
+        widgetsList.forEach(widget => {
+            const button = document.createElement('button');
+            button.textContent = widget.name;
+            button.addEventListener('click', () => addWidget(widget.url));
+            menu.appendChild(button);
+        });
+
+        loadWidgetsFromStorage();
+
+        function addWidget(url, position = null, size = null) {
+            const widget = document.createElement('div');
+            widget.className = 'widget';
+            widget.innerHTML = `<iframe src="${url}" sandbox="allow-scripts allow-same-origin"></iframe>`;
+            workspace.appendChild(widget);
+
+            widget.style.left = position ? position.x + 'px' : '50px';
+            widget.style.top = position ? position.y + 'px' : '180px'; // <-- aangepaste y-waarde
+            widget.style.width = size ? size.width + 'px' : '300px';
+            widget.style.height = size ? size.height + 'px' : '200px';
+
+            makeDraggableAndResizable(widget);
+            addCloseAndResizeButtons(widget);
+            saveWidgetsToStorage();
+        }
+
+        function makeDraggableAndResizable(element) {
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'IFRAME') return;
+                offsetX = e.clientX - element.offsetLeft;
+                offsetY = e.clientY - element.offsetTop;
+
+                function onMouseMove(e) {
+                    element.style.left = e.clientX - offsetX + 'px';
+                    element.style.top = e.clientY - offsetY + 'px';
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                document.addEventListener('mouseup', () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    saveWidgetsToStorage();
+                }, { once: true });
+            });
+        }
+
+        function addCloseAndResizeButtons(widget) {
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'X';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '5px';
+            closeButton.style.right = '5px';
+            closeButton.style.zIndex = '10';
+            closeButton.addEventListener('click', () => {
+                widget.remove();
+                saveWidgetsToStorage();
+            });
+            widget.appendChild(closeButton);
+
+            const resizeButton = document.createElement('button');
+            resizeButton.textContent = 'Resize';
+            resizeButton.style.position = 'absolute';
+            resizeButton.style.bottom = '5px';
+            resizeButton.style.right = '5px';
+            resizeButton.style.zIndex = '10';
+            resizeButton.addEventListener('click', () => {
+                const newWidth = prompt('Enter new width (px):', widget.offsetWidth);
+                const newHeight = prompt('Enter new height (px):', widget.offsetHeight);
+                if (newWidth && newHeight) {
+                    widget.style.width = newWidth + 'px';
+                    widget.style.height = newHeight + 'px';
+                    saveWidgetsToStorage();
+                }
+            });
+            widget.appendChild(resizeButton);
+        }
+
+        function saveWidgetsToStorage() {
+            const widgets = Array.from(document.querySelectorAll('.widget')).map(widget => ({
+                url: widget.querySelector('iframe').src,
+                position: {
+                    x: widget.offsetLeft,
+                    y: widget.offsetTop
+                },
+                size: {
+                    width: widget.offsetWidth,
+                    height: widget.offsetHeight
+                }
+            }));
+            localStorage.setItem('widgets', JSON.stringify(widgets));
+        }
+
+        function loadWidgetsFromStorage() {
+            const widgets = JSON.parse(localStorage.getItem('widgets'));
+
+            if (!widgets || widgets.length === 0) {
+                // Eerste keer laden: rooster-widget op y = 180
+                addWidget('../index-2.html', { x: 50, y: 180 }, { width: 500, height: 600 });
+            } else {
+                widgets.forEach(widget => addWidget(widget.url, widget.position, widget.size));
+            }
+        }
+    </script>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/custom.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:09 GMT -->
+</html>

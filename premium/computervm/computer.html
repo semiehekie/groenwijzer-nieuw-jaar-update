@@ -1,0 +1,163 @@
+<script>
+  // Controleer localStorage
+  const plus = localStorage.getItem("groenwijzer+");
+
+  if (plus !== "a4f") {
+    window.location.href = "../auth.html";
+  }
+</script>
+
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/computervm/computer.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:09 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  
+
+  <meta charset="UTF-8">
+  <title>Web Zoeken via DuckDuckGo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #333;
+      padding: 15px;
+      color: white;
+      text-align: left;
+    }
+
+    #webButton, #homeButton, #discordButton, #gamesButton {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    #searchSection {
+      display: none;
+      padding: 20px;
+    }
+
+    #gamesSection {
+      display: none;
+      padding: 20px;
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+ 
+  
+
+<div class = "header">
+  <button id="homeButton" onclick="window.location.href='../../index.html'">Home</button>
+  <button id="webButton">Web</button>
+  <button id="discordButton" onclick="window.location.href='https://discord.com/'">Discord</button>
+  <button id="gamesButton">Spelletjes</button>
+</div>
+
+<!-- Verborgen zoeksectie -->
+<div id="searchSection">
+  <h2>Zoek op internet via DuckDuckGo</h2>
+  <form id="searchForm">
+    <input type="text" id="searchInput" name="q" placeholder="Zoeken via DuckDuckGo">
+    <input type="submit" value="Zoek">
+  </form>
+</div>
+
+<!-- Verborgen spelletjes sectie -->
+<div id="gamesSection">
+  <h2>Spelletjes</h2>
+  <iframe src="game.html" title="Bloob.io Game"></iframe>
+</div>
+
+<!-- Modal -->
+<div id="searchModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <p>Je zoekopdracht wordt geopend in een nieuw tabblad.</p>
+    <p><a id="searchLink" href="#" target="_blank">Klik hier als het niet automatisch opent</a></p>
+  </div>
+</div>
+
+<script>
+  const webButton = document.getElementById('webButton');
+  const searchSection = document.getElementById('searchSection');
+  const gamesSection = document.getElementById('gamesSection');
+  const form = document.getElementById('searchForm');
+  const modal = document.getElementById('searchModal');
+  const link = document.getElementById('searchLink');
+  const input = document.getElementById('searchInput');
+  const gamesButton = document.getElementById('gamesButton');
+
+  webButton.addEventListener('click', () => {
+    searchSection.style.display = 'block';
+    gamesSection.style.display = 'none'; // Hide games section
+  });
+
+  gamesButton.addEventListener('click', () => {
+    gamesSection.style.display = 'block';
+    searchSection.style.display = 'none'; // Hide search section
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const query = encodeURIComponent(input.value.trim());
+    if (!query) return;
+    const url = `https://duckduckgo.com/?q=${query}`;
+    link.href = url;
+    modal.style.display = 'block';
+    window.open(url, '_blank');
+  });
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+</script>
+<a href="../../index.html"><button>home</button></a>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/computervm/computer.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:10 GMT -->
+</html>

@@ -1,0 +1,214 @@
+<script>
+  // Controleer localStorage
+  const plus = localStorage.getItem("groenwijzer_premium");
+
+  if (plus !== "a4f") {
+    window.location.href = "auth.html";
+  }
+</script>
+
+
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/file.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:09 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+         
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .file-upload {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button.delete {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <h1>File Explorer</h1>
+    
+    <div class="file-upload">
+        <input type="file" id="fileInput" multiple>
+        <button onclick="uploadFiles()">Upload Files</button>
+    </div>
+
+    <ul id="fileList" class="file-list"></ul>
+
+    <script>
+        // Initialize empty array in localStorage if it doesn't exist
+        if (!localStorage.getItem('files')) {
+            localStorage.setItem('files', '[]');
+        }
+
+        // Load header
+        fetch("header.html")
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data)
+            .catch(error => console.error("Error loading header:", error));
+
+        function uploadFiles() {
+            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
+            const MAX_SIZE = 4 * 1024 * 1024; // 4MB limit
+
+            for (let file of files) {
+                if (file.size > MAX_SIZE) {
+                    alert(`File ${file.name} is too large. Maximum size is 4MB`);
+                    continue;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const fileData = {
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            content: e.target.result,
+                            date: new Date().toISOString()
+                        };
+
+                        // Get current files and ensure it's an array
+                        const currentFiles = JSON.parse(localStorage.getItem('files') || '[]');
+                        const updatedFiles = Array.isArray(currentFiles) ? currentFiles : [];
+                        
+                        // Remove oldest file if storage is full
+                        while (true) {
+                            try {
+                                updatedFiles.push(fileData);
+                                const test = JSON.stringify(updatedFiles);
+                                localStorage.setItem('files', test);
+                                break;
+                            } catch (e) {
+                                if (updatedFiles.length <= 1) {
+                                    alert('Not enough storage space for this file');
+                                    return;
+                                }
+                                updatedFiles.shift(); // Remove oldest file
+                            }
+                        }
+                        displayFiles();
+                    } catch (error) {
+                        alert('Error saving file: Storage quota exceeded');
+                        console.error(error);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            fileInput.value = '';
+        }
+
+        function displayFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            // Get files and ensure it's an array
+            const files = JSON.parse(localStorage.getItem('files') || '[]');
+            if (!Array.isArray(files)) {
+                localStorage.setItem('files', '[]');
+                return;
+            }
+
+            files.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.className = 'file-item';
+                
+                const fileInfo = document.createElement('div');
+                fileInfo.innerHTML = `
+                    <strong>${file.name}</strong><br>
+                    <small>Size: ${formatSize(file.size)} | Date: ${new Date(file.date).toLocaleString()}</small>
+                `;
+
+                const actions = document.createElement('div');
+                actions.className = 'file-actions';
+
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = 'Download';
+                downloadBtn.onclick = () => downloadFile(file);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'delete';
+                deleteBtn.onclick = () => deleteFile(index);
+
+                actions.appendChild(downloadBtn);
+                actions.appendChild(deleteBtn);
+
+                li.appendChild(fileInfo);
+                li.appendChild(actions);
+                fileList.appendChild(li);
+            });
+        }
+
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function downloadFile(file) {
+            const link = document.createElement('a');
+            link.href = file.content;
+            link.download = file.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function deleteFile(index) {
+            let files = JSON.parse(localStorage.getItem('files') || '[]');
+            if (!Array.isArray(files)) {
+                files = [];
+            }
+            files.splice(index, 1);
+            localStorage.setItem('files', JSON.stringify(files));
+            displayFiles();
+        }
+
+        // Initial display
+        displayFiles();
+    </script>
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/file.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:09 GMT -->
+</html>

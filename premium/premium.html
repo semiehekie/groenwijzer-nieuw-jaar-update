@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/premium.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:04 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <script>
+  // Controleer localStorage
+  const plus = localStorage.getItem("groenwijzer_premium");
+
+  if (plus !== "a4f") {
+    window.location.href = "auth.html";
+  }
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroenWijzer Premium</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #4bab4f;
+    }
+
+    .premium-functions {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .function-item {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .function-item a {
+      color: #4bab4f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .function-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Laad de header van een extern bestand -->
+  <div id="header-placeholder"></div>
+
+  <script>
+    fetch("header.html")
+      .then((response) => response.text())
+      .then(
+        (data) =>
+          (document.getElementById("header-placeholder").innerHTML = data),
+      )
+      .catch((error) => console.error("Error loading the header:", error));
+  </script>
+
+  <h1>Welkom bij GroenWijzer Premium!</h1>
+  <p>Je hebt toegang tot alle premium functies! Hieronder staan de beschikbare functies:</p>
+
+  <div class="premium-functions">
+    <div class="function-item">
+      <h2>AI chatbot</h2>
+      <p>Je kunt nu chatten met de AI chatbot! <a href="ai.html">Klik hier om te starten.</a></p>
+    </div>
+
+    <div class="function-item">
+      <h2>Persoonlijk Dashboard</h2>
+      <p>Bekijk je persoonlijke dashboard met een overzicht van je gegevens. <a href="custom.html">Ga naar je dashboard.</a></p>
+    </div>
+
+    <div class="function-item">
+      <h2>File manager</h2>
+      <p>Je hebt nu een file manager in groenwijzer om al je projecten in op te slaan! <a href="file.html">Bekijk nu je bestanden</a></p>
+    </div>
+
+    <div class="function-item">
+      <h2>Virtuele computer</h2>
+      <p>Browse het internet en speel spelletjes via groenwijzer<a href="computervm/computer.html">Klik hier om te starten</a></p>
+    </div>
+  </div>
+
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/premium.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:05 GMT -->
+</html>

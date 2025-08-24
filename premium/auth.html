@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/auth.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:02 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <title>Bezig met controleren...</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="3">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bezig met controleren...</h1>
+  <p>Een momentje, je wordt zo doorgestuurd.</p>
+<script>
+  // Controleer toegang via localStorage
+  const premium = localStorage.getItem("groenwijzer_premium");
+  const plus = localStorage.getItem("groenwijzer+");
+
+  if (premium === "a4f") {
+    window.location.href = "premium.html";
+  } else if (plus === "a4f") {
+    window.location.href = "plus.html";
+  } else {
+    window.location.href = "kopen.html";
+  }
+</script>
+
+  
+  
+</body>
+
+<!-- Mirrored from groenwijzernederland.web.app/premium/auth.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 24 Aug 2025 11:46:02 GMT -->
+</html>
